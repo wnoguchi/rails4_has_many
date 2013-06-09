@@ -24,30 +24,43 @@ class PostsController < ApplicationController
   # POST /posts
   # POST /posts.json
   def create
-    @post = Post.new(post_params)
+    ActiveRecord::Base.transaction do
+    cparams = params.require(:post).permit(:subject, :post_date, :body, :user_id, :comments_attributes => [ :subject, :handle_name ])
+    @post = Post.new(cparams)
+    @post.save!
+    logger.debug @post
+    #@comments = params[:journal].map {|index_attr| Comment.new(cparams)}
+    #@comments.each {|comment| comment.post = @post}
+    #@comments.each {|comment| comment.save!}
+    #@post.comments_at
+    end
 
     respond_to do |format|
-      if @post.save
+      #if @post.save
         format.html { redirect_to @post, notice: 'Post was successfully created.' }
         format.json { render action: 'show', status: :created, location: @post }
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
-      end
+      #else
+      #  format.html { render action: 'new' }
+      #  format.json { render json: @post.errors, status: :unprocessable_entity }
+      #end
     end
   end
 
   # PATCH/PUT /posts/1
   # PATCH/PUT /posts/1.json
   def update
+    #@post.comments = []
+    cparams = params.require(:post).permit(:subject, :post_date, :body, :user_id, :comments_attributes => [ :id, :subject, :handle_name, :_destroy ])
+    ActiveRecord::Base.transaction do
     respond_to do |format|
-      if @post.update(post_params)
+      if @post.update(cparams)
         format.html { redirect_to @post, notice: 'Post was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
         format.json { render json: @post.errors, status: :unprocessable_entity }
       end
+    end
     end
   end
 

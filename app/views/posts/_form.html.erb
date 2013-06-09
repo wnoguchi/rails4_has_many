@@ -27,6 +27,12 @@
     <%= f.label :user %><br>
     <%= f.text_field :user %>
   </div>
+  <ul id="comments">
+    <%= f.fields_for :comments do |comment| %>
+      <%= render 'comment_fields', f: comment %>
+    <% end -%>
+  </ul>
+  <p><%= link_to_add_fields 'Add Comment', f, :comments %></p>
   <div class="actions">
     <%= f.submit %>
   </div>
