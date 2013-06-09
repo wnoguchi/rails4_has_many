@@ -26,3 +26,47 @@ Things you may want to cover:
 
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
+
+Rails4によるscaffoldを使った基本的なCRUDを備えた複雑なフォームを作る（ブログ編）
+
+has_manyとfields_forを使うんだろうなあと漠然と考えていましたが、Rails4で実際に実装するとどうなるでしょうか。
+
+**
+
+bundle exec rails generate scaffold user username:string
+
+bundle exec rails generate scaffold post subject:string post_date:date body:text user:references
+
+bundle exec rails generate model comment post:references subject:string handle_name:string comment:text
+
+bundle exec rails generate model kind name:string
+
+
+undefined method `link_to_remove_fields' for
+
+accepts_nested_attributes_for :photos, :reject_if => :all_blank, :allow_destroy => true
+
+app/assets/javascripts/application.js
+function remove_fields(link) {
+  $(link).prev("input[type=hidden]").val("true");
+  $(link).closest(".fields").hide();
+}
+
+function add_fields(link, association, content) {
+  var new_id = new Date().getTime();
+  var regexp = new RegExp("new_" + association, "g")
+  $(link).parent().before(content.replace(regexp, new_id));
+}
+
+
+[http://d.hatena.ne.jp/zariganitosh/20080104/1199437301 has_manyな関連で、1アクションで複数のモデルを同時に保存するには？ - ザリガニが見ていた...。]
+[http://kray.jp/blog/has-many-through-nested-object-forms/ [Rails] Nested Object Forms を使って多対多の関係をスマートに編集 | KRAY Inc]
+[http://stackoverflow.com/questions/8609270/undefined-method-link-to-add-remove-for-simpleformformbuilder ruby on rails - Undefined method 'link_to_add\remove' for #<SimpleForm::FormBuilder> - Stack Overflow]
+[http://stackoverflow.com/questions/16138353/activerecordrecordnotfound-couldnt-find-without-an-id ruby on rails - ActiveRecord::RecordNotFound - Couldn't find without an ID - Stack Overflow]
+
+
+Processing by PostsController#new as HTML
+DEPRECATION WARNING: link_to_function is deprecated and will be removed from Rails 4.1. We recommend using Unobtrusive JavaScript instead. See http://guides.rubyonrails.org/working_with_javascript_in_rails.html#unobtrusive-javascript. (called from link_to_remove_fields at /home/unicast/apps/myblog/app/helpers/application_helper.rb:4)
+
+Unpermitted parameters: _destroy
+
